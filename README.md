@@ -7,8 +7,8 @@ This project develops a novel 3D mixed-mode model to predict kinetics of austeni
 - Gibbs energy balance between chemical driving force and energy dissipations due to interface friction and solute drag 
 
 # Denpendencies of the code
-1. Install the Multi-Parametric Toolbox 3 (mpt3): https://www.mpt3.org/ into the same folder, for generating Voronoi cells to represent austenite grains.
-2. Make sure that 'Optimization toolbox' and 'Symbolic Math toolbox' are included in your own Matlab package. These toolboxes should be included by default.
+- Install the Multi-Parametric Toolbox 3 (mpt3): https://www.mpt3.org/ into the same folder, for generating Voronoi cells to represent austenite grains.
+- Make sure that 'Optimization toolbox' and 'Symbolic Math toolbox' are included in your own Matlab package. These toolboxes should be included by default.
 All codes have been tested executable with Matlab 2014b or above.
 
 # Running the simulation
