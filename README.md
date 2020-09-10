@@ -12,13 +12,13 @@ This project develops a novel 3D mixed-mode model to predict kinetics of austeni
 All codes have been tested executable with Matlab 2014b or above.
 
 # Running the simulation
-Very simple. <br>
-Just run [ferrite_3d_model_voronoin_PBC_ND_CNT_GEB.m](https://github.com/haixingfang/3D-GEB-mixed-mode-model/blob/master/ferrite_3d_model_voronoin_PBC_ND_CNT_GEB.m). <br>
+Very simple. Just run [ferrite_3d_model_voronoin_PBC_ND_CNT_GEB.m](https://github.com/haixingfang/3D-GEB-mixed-mode-model/blob/master/ferrite_3d_model_voronoin_PBC_ND_CNT_GEB.m). <br>
 But, remember to first set up the chemical compositions, heat treatment parameters and include thermodynamic data (which can be parameterized first with Thermo-Calc software) in ['SimulCond.m'](https://github.com/haixingfang/3D-GEB-mixed-mode-model/blob/master/SimulCond.m). <br>
+<br>
 Within this file, set the 'CyclicFlag' for different thermal routes: <br>
-1-thermal cycling; <br>
-0-isothermal holding; <br>
--1-continuous cooling. <br>
+- 1-thermal cycling; <br>
+- 0-isothermal holding; <br>
+- -1-continuous cooling. <br>
 
 # Run on a linux cluster
 The code can run on a linux cluster by running the bash file ['FeCMn_3D_GEB.pbs'](https://github.com/haixingfang/3D-GEB-mixed-mode-model/blob/master/FeCMn_3D_GEB.pbs).
