@@ -2,7 +2,7 @@
 This project develops a novel 3D mixed-mode model to predict kinetics of austenite-ferrite phase transformations in low-alloyed steels under various conditions of heat treatments. This model takes into account both nucleation and interface migration. The nucleation is calculated according to continuous nucleation theory. The interface migration is computed by deriving interface velocity that meets the Gibbs energy balance (GEB) beteween chemical driving force and energy dissipations due to interface friction and trans-diffusion of substitutional elements inside the interface. The latter is normally termed as solute drag. Since an analytical solution for calculating the solute drag is proposed, the computation speed has been increased significantly compared to the conventional approach. New features of this model are its efficient algorithm to compute energy dissipation by solute drag, its capabilities of predicting the microstructural state for spatially resolved grains and the minimal adjustment of modelling parameters.
 
 # Features of the model
-- austenite-ferrite phase transformations during continuous cooling, isothermal holding and thermal cycling in the two-phase region.
+- Austenite-ferrite phase transformations during continuous cooling, isothermal holding and thermal cycling in the two-phase region.
 - Nucleation and interface migrates isotropically
 - Gibbs energy balance between chemical driving force and energy dissipations due to interface friction and solute drag 
 
@@ -12,8 +12,8 @@ This project develops a novel 3D mixed-mode model to predict kinetics of austeni
 All codes have been tested executable with Matlab 2014b or above.
 
 # Running the simulation
-Very simple. Just run [ferrite_3d_model_voronoin_PBC_ND_CNT_GEB.m](https://github.com/haixingfang/3D-GEB-mixed-mode-model/blob/master/ferrite_3d_model_voronoin_PBC_ND_CNT_GEB.m). \n
-But, remember to first set up the chemical compositions, heat treatment parameters and include thermodynamic data (which can be parameterized first with Thermo-Calc software) in ['SimulCond.m'](https://github.com/haixingfang/3D-GEB-mixed-mode-model/blob/master/SimulCond.m).
+Very simple. Just run [ferrite_3d_model_voronoin_PBC_ND_CNT_GEB.m](https://github.com/haixingfang/3D-GEB-mixed-mode-model/blob/master/ferrite_3d_model_voronoin_PBC_ND_CNT_GEB.m). <br>
+But, remember to first set up the chemical compositions, heat treatment parameters and include thermodynamic data (which can be parameterized first with Thermo-Calc software) in ['SimulCond.m'](https://github.com/haixingfang/3D-GEB-mixed-mode-model/blob/master/SimulCond.m). <br>
 Within this file, set the 'CyclicFlag' for different thermal routes:
 1-thermal cycling;
 0-isothermal holding;
