@@ -11,7 +11,7 @@ The code establishes a model for predicting kinetics of austenite-ferrite phase 
 - Make sure that 'Optimization toolbox' and 'Symbolic Math toolbox' are included in your own Matlab package. These toolboxes should be included by default.
 All codes have been tested executable with Matlab 2014b or above.
 
-# Running the simulation
+# Run the code on PC
 Very simple. Just run [ferrite_3d_model_voronoin_PBC_ND_CNT_GEB.m](https://github.com/haixingfang/3D-GEB-mixed-mode-model/blob/master/ferrite_3d_model_voronoin_PBC_ND_CNT_GEB.m). <br>
 But, remember to first set up the chemical compositions, heat treatment parameters and include thermodynamic data (which can be parameterized first with Thermo-Calc software) in [SimulCond.m](https://github.com/haixingfang/3D-GEB-mixed-mode-model/blob/master/SimulCond.m). <br>
 <br>
