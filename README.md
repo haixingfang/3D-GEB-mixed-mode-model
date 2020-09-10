@@ -15,7 +15,7 @@ All codes have been tested executable with Matlab 2014b or above.
 Very simple. Just run [ferrite_3d_model_voronoin_PBC_ND_CNT_GEB.m](https://github.com/haixingfang/3D-GEB-mixed-mode-model/blob/master/ferrite_3d_model_voronoin_PBC_ND_CNT_GEB.m). <br>
 But, remember to first set up the chemical compositions, heat treatment parameters and include thermodynamic data (which can be parameterized first with Thermo-Calc software) in [SimulCond.m](https://github.com/haixingfang/3D-GEB-mixed-mode-model/blob/master/SimulCond.m). <br>
 <br>
-Within this file, set the 'CyclicFlag' for different thermal routes:
+Within this file, set the variable [CyclicFlag](https://github.com/haixingfang/3D-GEB-mixed-mode-model/blob/master/SimulCond.m) for different thermal routes:
 - 1-thermal cycling; <br>
 - 0-isothermal holding; <br>
 - -1-continuous cooling. <br>
