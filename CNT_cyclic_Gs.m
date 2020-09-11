@@ -2,7 +2,7 @@
 % main Ref: S.E.Offerman et al Science 2002; S.E.Offerman et al Scientific
 % Report 2016
 % Suitable for Fe-C-Mn system
-% CNTt: m-3s-1
+% CNTt: m^-3s^-1
 
 function [CNTt EnergyB Freq Scailing]=CNT_cyclic_Gs(Temp,f_bcc,NpotT,deltaGV,t,dt,xC_F,Comp_m)
 
@@ -21,7 +21,8 @@ a_bcc=2.886*(1+17.5e-6*(Temp-800)); % [A]
 a_fcc=(3.6308+0.0075*xC)*(1+(24.9-0.6*xC)*1e-6*(Temp-1000)); % [A]
 Poisson=1/3; % Poisson ratio
 mu=6e10; % shear modulus of Fe [N/m2]
-Gs=(2*(1-Poisson)/(9*(1+Poisson)))*mu*((a_bcc^3/2-a_fcc^3/4)/(a_fcc^3/4))^2; % [J/m3] J.D. Eshelby, 1957 and Cotes2004_Article_FccHcpMartensiticTransformatio
+% Gs=(2*(1+Poisson)/(9*(1-Poisson)))*mu*((a_bcc^3/2-a_fcc^3/4)/(a_fcc^3/4))^2; % [J/m3] J.D. Eshelby, 1957
+Gs=(2*(1-Poisson)/(9*(1+Poisson)))*mu*((a_bcc^3/2-a_fcc^3/4)/(a_fcc^3/4))^2; % [J/m3] Cotes2004_Article_FccHcpMartensiticTransformatio
 % Gs=2*mu*(1+Poisson)/(1-Poisson)*((a_bcc^3/2-a_fcc^3/4)/(a_fcc^3/4)).^2; % The strain energy of a coherent ellipsoidal precipitate 1974 [J/m3]
 % Gs=6*mu*((a_bcc^3/2-a_fcc^3/4)/(a_fcc^3/4))^2; % The role of strain energy during precipitation of copper and gold from alpha iron 1962 [J/m3]
 % Gs=3.8*mu*((a_bcc^3/2-a_fcc^3/4)/(a_fcc^3/4))^2; % precipitate number density in Ni-Al alloy 1970
@@ -32,7 +33,7 @@ psi=1e-8; % a factor containing the information of shape of critical nucleus and
 
 % these two parameters should be adjusted to match the experimental data
 % by default, tao = 0
-SC=1/300; % S/C, scaling factor of potential nucleation sites/nucleation scale
+SC=1/500; % S/C, scaling factor of potential nucleation sites/nucleation scale [300-1000]
 tao=0; % varies in 4~18s according to S.E.Offerman et al Scientific Report 2016
 % %% Calculate incubation time according to Aaronson
 % a=3.620e-10; % Jumping distance [m]

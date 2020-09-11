@@ -808,6 +808,8 @@ while stop_cycle~=1 % main loop to calculate nucleation,growth and call impingem
              end                    
         ll=ll+1;
     end
+    Ndt=[300 30]; % number of calculation points for one heating/cooling segment
+    % too small could lead to oscillation results. Recommend values are [300 30]
          if max(abs(v_t(i,:)))~=0
             dt1=dx(1)/max(abs(v_t(i,:))); % update time step [s]
             dt2=dx(2)/max(abs(v_t(i,:))); % update time step [s]
@@ -821,28 +823,27 @@ while stop_cycle~=1 % main loop to calculate nucleation,growth and call impingem
          elseif all(v_t(i,:)==0)==1 && Timer(i)>tcr(2)+(tcr(3)-tcr(2))*1/4 && Timer(i)<tcr(3)-1-dt(i)
              dt(i+1)=tcr(3)-1-Timer(i)-dt(i);
             if Timer(i)+dt(i)+dt(i+1)>tcr(3)
-%                 dt(i+1)=dt(1);
                  if RT(2)<5
-                    dt(i+1)=min([dt(i+1) (cycT(2)-cycT(1))./RT(2)/300]);
+                    dt(i+1)=min([dt(i+1) (cycT(2)-cycT(1))./RT(2)/Ndt(1)]);
                  else
-                    dt(i+1)=min([dt(i+1) (cycT(2)-cycT(1))./RT(2)/30]);
+                    dt(i+1)=min([dt(i+1) (cycT(2)-cycT(1))./RT(2)/Ndt(2)]);
                  end
             end
          else
              dt(i+1)=dt(1);
              if Timer(i)+dt(i)+dt(i+1)>tcr(3)
                  if RT(2)<5
-                    dt(i+1)=min([dt(i+1) (cycT(2)-cycT(1))./RT(2)/300]);
+                    dt(i+1)=min([dt(i+1) (cycT(2)-cycT(1))./RT(2)/Ndt(1)]);
                  else
-                    dt(i+1)=min([dt(i+1) (cycT(2)-cycT(1))./RT(2)/30]);
+                    dt(i+1)=min([dt(i+1) (cycT(2)-cycT(1))./RT(2)/Ndt(2)]);
                  end
              end
          end
          if CyclicFlag==1 && Timer(i)>=tcr(3)-dt(1) && Timer(i)<=tcr(end-1)+dt(1)
              if RT(2)<5
-                dt(i+1)=min([dt(i+1) (cycT(2)-cycT(1))./RT(2)/300]);
+                dt(i+1)=min([dt(i+1) (cycT(2)-cycT(1))./RT(2)/Ndt(1)]);
              else
-                dt(i+1)=min([dt(i+1) (cycT(2)-cycT(1))./RT(2)/30]);
+                dt(i+1)=min([dt(i+1) (cycT(2)-cycT(1))./RT(2)/Ndt(2)]);
              end
          end
     else
