@@ -20,7 +20,7 @@ Within this file, set the variable [CyclicFlag](https://github.com/haixingfang/3
 - 0-isothermal holding; <br>
 - -1-continuous cooling. <br>
 
-# Run on a linux cluster
+# Run the code on a linux cluster
 The code can run on a linux cluster by running the bash file [FeCMn_3D_GEB.pbs](https://github.com/haixingfang/3D-GEB-mixed-mode-model/blob/master/FeCMn_3D_GEB.pbs).
 
 # License
