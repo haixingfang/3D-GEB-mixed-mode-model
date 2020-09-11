@@ -26,8 +26,11 @@ The code can run on a linux cluster by running the bash file [FeCMn_3D_GEB.pbs](
 
 # License
 This package is free to use, ditribute and adapt, but no warranty and liability to any kinds of simulation results. <br>
-Citing our work (will be published and updated here) is strongly encouraged if you use or get inspired by our code. <br>
 See the [LICENSE](https://github.com/haixingfang/3D-GEB-mixed-mode-model/blob/master/LICENSE) for license rights and limitations (GNU General Public License v3.0).
+
+# Reference
+A paper describing the details of the model is prepared and will be published and updated here. <br>
+Please cite our paper if you use or get inspired by our code.
 
 ## Contact via hfang@tudelft.nl or haixingfang868@gmail.com
 
