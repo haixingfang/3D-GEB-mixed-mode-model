@@ -25,14 +25,14 @@ close all;
 % load Multi-Parametric Toolbox 3
 % https://www.mpt3.org/
 % addpath('C:\Users\hfang\Documents\MATLAB\tbxmanager');
-if isdir('.\tbxmanager')
+if exist('.\tbxmanager','dir')
     addpath('.\tbxmanager');
     tbxmanager restorepath;
     mpt_init;
 else
-    fprintf(['The path of mpt3 toolbox is not found. \n', ...
+    fprintf(['Error: the path of mpt3 toolbox is not found. \n', ...
         'Please install mpt3 toolbox first! \n', ...
-        'ttps://www.mpt3.org/ \n']);
+        'Download from https://www.mpt3.org/ \n']);
 end
 % cite using MPT3:
 % M. Herceg, M. Kvasnica, C.N. Jones, and M. Morari. Multi-Parametric Toolbox 3.0. In Proc. of the European Control Conference, pages 502?10, Zurich, Switzerland, July 17?9 2013.
