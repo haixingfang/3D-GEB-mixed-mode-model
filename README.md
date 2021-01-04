@@ -21,6 +21,7 @@ Within this file, set the variable [CyclicFlag](https://github.com/haixingfang/3
 - 1-thermal cycling; <br>
 - 0-isothermal holding; <br>
 - -1-continuous cooling. <br>
+
 The variable [fsite](https://github.com/haixingfang/3D-GEB-mixed-mode-model/blob/master/ferrite_3d_model_voronoin_PBC_ND_CNT_GEB.m) defines the fraction of different types of potential nucleation sites: grain corners, edges or boundaries. Only nucleation at grain corners is allowed by default.
 
 # Run the code on a linux cluster
