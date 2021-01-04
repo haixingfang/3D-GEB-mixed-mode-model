@@ -19,10 +19,12 @@
 % before this model can be applied to other alloys
 % for running on linux cluster
 
+% Last update on Jan 4, 2020
+
 clear all;
 % start the MPT3 toolbox
 if exist('.\tbxmanager','dir')
-%     addpath('.\tbxmanager');
+    addpath('.\tbxmanager');
     tbxmanager restorepath;
     mpt_init;
 else
@@ -104,7 +106,11 @@ if generate_new_seed==1
     dlmwrite(strcat(num2str(length(A)),'AusteniteCentroidsSymmetric.txt'),[A(:,1) A(:,2) A(:,3)],'delimiter',' ');
 else
     % load the predefined austenite centroid coordinates
-    FileName_prefix='153AusteniteCentroidsSymmetric'; % randomly generate 153 symmetric centers
+	if dfcc==20
+        FileName_prefix='153AusteniteCentroidsSymmetric'; % randomly generate 153 symmetric centers
+	else
+	    FileName_prefix='151AusteniteCentroidsSymmetric_Lb175_d50'; % primarily for dfcc = 50 um
+	end
     FileName_pattern='.txt';
     baseFileName=[FileName_prefix FileName_pattern];
     fullFileName=fullfile(pwd, baseFileName);
@@ -132,11 +138,58 @@ B=Polyhedron([-minus_edge-Lb/2 -minus_edge-Lb/2 -minus_edge-Lb/2; ...
 [V,cells] = mpt_voronoi(A', 'bound', B); % Call for the mpt_voronoi
 vertices = V.Set.forEach(@(e) e.V, 'UniformOutput', false);% find the vertices for each cell
 new_vertices = cat(1, vertices{:}); % Combine the vertices into one matrix
-potential0=unique(round(new_vertices*1e6), 'rows')/1e6; % Get rid of the numerical noise 
+potential1=unique(round(new_vertices*1e6), 'rows')/1e6; % Get rid of the numerical noise
+
+% common faces for each grain
+for i=1:length(V.Set)
+    CommonFaces{i}=[];
+    for j=1:length(V.Set)
+        if i~=j
+            [ts iP iQ]=isAdjacent(V.Set(i),V.Set(j));
+            if ts==1
+                CommonFaces{i}=[CommonFaces{i};i j ts iP iQ]; % grain i j, isAdjacent, faceNr in grain i and j
+            end
+        end
+    end
+    i
+end
+
+% grain edge (on the line) and boundary (on the face)
+edges=[];
+boundaries=[];
+for i=1:length(V.Set)
+    faces{i}=V.Set(i).getFacet; % get all faces of each polyhedron
+    for j=1:length(faces{i})
+        edges_points=faces{i}(j).facetInteriorPoints;
+        ShareGrNr=find(CommonFaces{i}(:,4)==j);
+        for k=1:length(edges_points(:,1))
+            if ~isempty(ShareGrNr)
+                edges=[edges;edges_points(k,:) CommonFaces{i}(ShareGrNr,[1:2 4:5])]; % grain line [xyz, grain number in share, face nr in both grains]
+            else
+                edges=[edges;edges_points(k,:) i 0 j 0];
+            end
+        end
+        bou=V.Set(i).chebyCenter(j);
+        if ~isempty(ShareGrNr)
+            boundaries=[boundaries;bou.x' CommonFaces{i}(ShareGrNr,[1:2 4:5])]; % grain face [xyz, grain number in share, face nr]
+        else
+            boundaries=[boundaries;bou.x' i 0 j 0];
+        end
+    end
+    i
+end
+
+potential2=unique(edges(:,1:3),'rows');
+potential3=unique(boundaries(:,1:3),'rows');
+potential0=[potential1;potential2;potential3];
+potential0(:,4)=[ones(length(potential1),1);2*ones(length(potential2),1);3*ones(length(potential3),1)];
+
 to_remove = [-Lb/2 -Lb/2 -Lb/2;Lb/2 -Lb/2 -Lb/2;Lb/2 Lb/2 -Lb/2;-Lb/2 Lb/2 -Lb/2; ...
     -Lb/2 -Lb/2 Lb/2;Lb/2 -Lb/2 Lb/2;Lb/2 Lb/2 Lb/2;-Lb/2 Lb/2 Lb/2];% Remove the corners of the Lb*Lb*Lb cubic
-potential=setdiff(potential0, to_remove, 'rows');
-for i=1:length(potential)
+[potential ia]=setdiff(potential0(:,1:3), to_remove, 'rows');
+potential(:,4)=potential0(ia,4);
+
+for i=1:length(potential(:,1))
     for j=1:3
     if potential(i,j)>Lb/2
        potential(i,j)=Lb/2+1;
@@ -146,27 +199,46 @@ for i=1:length(potential)
     end
     end
 end
-site=[];
+site_all=[];
 % Remove points outside of the Lb*Lb*Lb cubic box
-for i=1:length(potential)
-  if all(potential(i,:)-Lb/2-1)&&all(potential(i,:)+Lb/2+1)
-     eval(['site',num2str(i),'=','potential(i,:)']); % Convert the number to string
-     eval(['site=[site;site',num2str(i),'];']);  % Combine site1, site 2,...
+for i=1:length(potential(:,1))
+  if all(potential(i,:)-Lb/2-1) && all(potential(i,:)+Lb/2+1)
+%      eval(['site',num2str(i),'=','potential(i,:)']); % Convert the number to string
+%      eval(['site=[site;site',num2str(i),'];']);  % Combine site1, site 2,...
+     site_all=[site_all;potential(i,:)];
   end
 end
+site_all=site_all(randperm(length(site_all(:,1))),:);
+
+% define the fraction of types of potential nucleation sites:
+% 1-corners, 2-edges, 3-boundaries
+% fsite=[length(find(site_all(:,4)==1)) length(find(site_all(:,4)==2)) length(find(site_all(:,4)==3))]/length(site_all(:,1));
+fsite=[1 0 0]; % manually defined, by default, only corners are potential nucleation sites
+% fsite=[0.5 0.25 0.25]; % manually defined
+site_potential=length(find(site_all(:,4)==1)); % total potential nucleation sites
+fsite(2:3)=fix(fsite(2:3)*site_potential);
+fsite(1)=site_potential-sum(fsite(2:3));
+site=[];
+for i=1:3
+    site_index=find(site_all(:,4)==i);
+    site=[site;site_all(site_index(1:fsite(i)),:)];
+end
+
 p1=randperm(length(site));
 if N0>length(site)
     N0=length(site);
 end
-position=site(p1(1:N0),:);% Randomly select N0 potential nucleation site for ferrite
-site=site(randperm(length(site)),:); % randomly sort the possible nucleation sites
+position=site(p1(1:N0),1:3);% Randomly select N0 potential nucleation site for ferrite
+site=site(p1,:); % randomly sort the possible nucleation sites
+site_type=site(:,4);
+site=site(:,1:3);
+
 %{
 figure('Name','Austenite geometry');
 subplot(1,2,1);
 V.plot('alpha', 0.13); % Adjust the transparancy
 hold all;
 plot3(A(:,1),A(:,2),A(:,3),'b+','LineWidth',2);% Plot the centroids
-plot3(potential0(:,1),potential0(:,2),potential0(:,3),'r.','MarkerSize',20); % Plot all the corners
 axis([-enlarge_Lb/2 enlarge_Lb/2 -enlarge_Lb/2 enlarge_Lb/2 -enlarge_Lb/2 enlarge_Lb/2]);
 xlabel('x (\mum)','FontSize',16);
 ylabel('y (\mum)','FontSize',16);
@@ -185,8 +257,12 @@ subplot(1,2,2);
 V.plot('alpha', 0.13); % Adjust the transparancy
 hold all;
 plot3(A(:,1),A(:,2),A(:,3),'b+','LineWidth',2);% Plot the centroids
-plot3(site(:,1),site(:,2),site(:,3),'r.','MarkerSize',20);% Plot the corners
-% plot3(position(:,1),position(:,2),position(:,3),'b*','LineWidth',2);
+% plot3(site_all(:,1),site_all(:,2),site_all(:,3),'r.','MarkerSize',20);
+% plot3(site(:,1),site(:,2),site(:,3),'b*','LineWidth',2);% Plot all the potential nucleation sites
+plot3(site(:,1),site(:,2),site(:,3),'r.','MarkerSize',20);
+% siteA=site(find(site_type==1),:);
+% siteB=site(find(site_type==2),:);
+% siteC=site(find(site_type==3),:);
 grid off;
 xlabel('x (\mum)','FontSize',16);
 ylabel('y (\mum)','FontSize',16);
@@ -199,7 +275,6 @@ set(get(gca,'zlabel'),'rotation',90);
 set(gca,'fontsize',14);
 set(gca,'linewidth',2);
 box on;
-legend('+ centroids of austenite grains','. potential ferrite nucleation sites','* randomly selected nucleation sites');
 hold off;
 %}
 
@@ -247,13 +322,27 @@ for i=1:length(site)
     N_p(i,12)=0;% actual volume fraction/equilibrium volume fraction predicted by phase diagram
     N_p(i,13)=0;% The flag of impingement of 4 spheres (0 denotes no impingement while 1 denotes impingement)
     N_PR{i}=[];
-    for j=1:length(A)
-      for k=1:length(V.Set(j).V)
-       if abs(site(i,1)-V.Set(j).V(k,1))<=eps && abs(site(i,2)-V.Set(j).V(k,2))<=eps && abs(site(i,3)-V.Set(j).V(k,3))<=eps
-          N_PR{i}=[N_PR{i}; j k]; % derive the corresponding relationship between vertex and austenite grains
-       end
-      end
-    end
+    if site_type(i)==1
+        for j=1:length(A)
+              for k=1:length(V.Set(j).V)
+               if abs(site(i,1)-V.Set(j).V(k,1))<=eps && abs(site(i,2)-V.Set(j).V(k,2))<=eps && abs(site(i,3)-V.Set(j).V(k,3))<=eps
+                  N_PR{i}=[N_PR{i};j k]; % neighboring grain sharing the grain vertice and vertice number
+               end
+              end
+        end
+    elseif site_type(i)==2
+        edges_index=find(edges(:,1)==site(i,1) & edges(:,2)==site(i,2) & edges(:,3)==site(i,3));
+%         N_PR{i}=[N_PR{i};edges(edges_index,5:6)]; % neighboring grain sharing the grain line and face number
+        if length(edges_index)==1
+            N_PR{i}=[N_PR{i};edges(edges_index,[4 6]);edges(edges_index,[5 7])]; % can be shared up to 3 grains
+        else
+            edges_potential=[edges(edges_index,[4 6]);edges(edges_index,[5 7])];
+            N_PR{i}=[N_PR{i};edges_potential([1 3:end],:)];
+        end
+    else
+        boundaries_index=find(boundaries(:,1)==site(i,1) & boundaries(:,2)==site(i,2) & boundaries(:,3)==site(i,3));
+        N_PR{i}=[N_PR{i};boundaries(boundaries_index,[4 6]);boundaries(boundaries_index,[5 7])]; % neighboring grain sharing the grain face and face number
+    end           
     for m=1:length(N_PR{i}(:,1))
         N_PR{i}(m,3)=sqrt((site(i,1)-A_P(N_PR{i}(m,1),2))^2+(site(i,2)-A_P(N_PR{i}(m,1),3))^2+(site(i,3)-A_P(N_PR{i}(m,1),4))^2);% identical distance to neighbouring centers
     end
@@ -363,8 +452,10 @@ if CyclicFlag==1
     if dt(1)<0.5
         dt(1)=0.5;
     end
+elseif CyclicFlag==0
+    dt(1)=tcr(end)/1000; % for isothermal, 3000 iterations take about 24 h, keep iterations between 1000 and 3000
 else
-    dt(1)=tcr(end)/1000; % 3000 iterations take about 24 h, keep iterations between 1000 and 3000
+    dt(1)=tcr(end)/100; % for continuous cooling, about 3.5 h
 end
 dx=[1 0.005]; % max and min step size in length [um]
 DiffInfo=cell([1 length(N_p(:,1))]);
@@ -438,7 +529,8 @@ while stop_cycle~=1 % main loop to calculate nucleation,growth and call impingem
         Freq(i)=0;
         Scailing(i)=0;
     else
-       [Nt_cnt(i) EnergyB(i) Freq(i) Scailing(i)]=CNT_cyclic_Gs(T(i),F(i-1),length(site)-sumN(i-1),deltaGV(i),Timer(i),dt(i),xC_F_eq(i-1),Comp_m); % modified Gs on July 17, 2019 [s-1]
+       [Nt_cnt(i) EnergyB(i) Freq(i) Scailing(i)]=CNT_cyclic_Gs(T(i),F(i-1),length(site), ...
+	        deltaGV(i),Timer(i),dt(i),xC_F_eq(i-1),Comp_m); % [s-1]
     end
     if CyclicFlag==1 && Timer(i)>=tcr(3)
         %%%% no accumulation
