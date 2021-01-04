@@ -188,8 +188,8 @@ if CyclicFlag==-1 % continuous cooling
     RT(3)=0;
     cycN=0;
     hold_t(1)=0;
-    RT(1)=0.4; % [K/s]
-    RT(4)=0.4; % [K/s]
+    RT(1)=10; % [K/s]
+    RT(4)=10; % [K/s]
 end
 
 end
