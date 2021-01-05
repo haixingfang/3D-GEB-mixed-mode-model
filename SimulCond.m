@@ -33,8 +33,8 @@ Temp_eq=[1124 986]; % A3-ortho A1+ [K]
 Feq_max=0.985; % maximum ferrite fraction
 %%%%% cycling settings
 RT=[20*60 10*60 10*60 20*60]./60;% First cooling rate; cycling heating rate; cycling cooling rate; final cooling rate [oC/s]
-hold_t=[3 0 0].*60; % holding time for first duration, duration after heating, duration after cooling [s]
-cycN=1; % number of cycles
+hold_t=[30 0 0].*60; % holding time for first duration, duration after heating, duration after cooling [s]
+cycN=3; % number of cycles
 cycT=[785 842]+273; % cycling temperature [K]
 % 
 % % Fe-0.1C-1.0Mn
