@@ -19,7 +19,7 @@
 % before this model can be applied to other alloys
 % for running on linux cluster
 
-% Last update on Jan 4, 2020
+% Last update on Jan 4, 2021
 
 clear all;
 % start the MPT3 toolbox
