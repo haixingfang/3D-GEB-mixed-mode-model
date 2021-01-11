@@ -32,7 +32,7 @@ T_wC=[5.76665e1 -2.48065e2 1.14063e3]; % TA3=a*wC^2+b*wC+c under PE [K] (wC in w
 Temp_eq=[1124 986]; % A3-ortho A1+ [K]
 Feq_max=0.985; % maximum ferrite fraction
 %%%%% cycling settings
-RT=[20*60 10*60 10*60 20*60]./60;% First cooling rate; cycling heating rate; cycling cooling rate; final cooling rate [oC/s]
+RT=[20*60 10 10 20*60]./60;% First cooling rate; cycling heating rate; cycling cooling rate; final cooling rate [oC/s]
 hold_t=[30 0 0].*60; % holding time for first duration, duration after heating, duration after cooling [s]
 cycN=3; % number of cycles
 cycT=[785 842]+273; % cycling temperature [K]

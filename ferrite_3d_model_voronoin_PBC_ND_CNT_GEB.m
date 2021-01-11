@@ -450,7 +450,8 @@ F(1)=0; % initial ferrite fraction
 sumN(1)=0; % total ferrite nucleis
 t=0;    % define initial t
 if CyclicFlag==1
-    dt(1)=((cycT(2)-cycT(1))/RT(2))/50; % make sure there are 20-500 data points during the heating or cooling segment of cycling
+%     dt(1)=((cycT(2)-cycT(1))/RT(2))/50; % make sure there are 20-500 data points during the heating or cooling segment of cycling
+    dt(1)=tcr(3)/1000;
     if dt(1)<0.5
         dt(1)=0.5;
     end
@@ -941,8 +942,9 @@ while stop_cycle~=1 % main loop to calculate nucleation,growth and call impingem
     else
         dt(i+1)=dt(1);
     end
-    if exist('v_t','var')
-        if all(abs(v_t(i,:))<=1e-4) && Timer(i)>tcr(2) && Timer(i)<tcr(3)-(tcr(3)-tcr(2))/15 && CyclicFlag==1
+    if exist('v_t','var') && i>2
+%         if all(abs(v_t(i,:))<=1e-4) && Timer(i)>tcr(2) && Timer(i)<tcr(3)-(tcr(3)-tcr(2))/15 && CyclicFlag==1
+        if (all(abs(v_t(i,:))<=5e-3) || abs(F(i-1)-F(i-2))<=5e-5) && Timer(i)>tcr(2) && Timer(i)<tcr(3)-(tcr(3)-tcr(2))/15 && CyclicFlag==1
             dt(i+1)=(tcr(3)-tcr(2))/15;
             if Timer(i)+dt(i)+dt(i+1)>tcr(3)
                 dt(i+1)=dt(1);
