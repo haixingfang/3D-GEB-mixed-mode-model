@@ -789,9 +789,9 @@ while stop_cycle~=1 % main loop to calculate nucleation,growth and call impingem
                        [DragInfo{l}(i,1,:) DiffInfo{l}(i,1,:)]=solute_drag_dissipation_InterX_drag_analytical(T(i),Comp_m(2),N_p(l,15),N_p(l,17),Ux, ...
                         xC_F_eq(i),xC_A_eq(i),N_p(l,34),D_C(i)*1e-12,Kafang(i),N_p(l,7),length(N_PR{l}(:,1)),N_p(l,32),N_p(l,26),F(i-1),tcr(3),Timer(i),TransDir);
                        
-                        [DragInfo{l}(i,1,:) DiffInfo{l}(i,1,:) GibbsE]=loopV_solute_drag(V0(1),T(i),Comp_m(2),N_p(l,15),N_p(l,17),Ux, ...
-                            xC_F_eq(i),xC_A_eq(i),N_p(l,34),D_C(i)*1e-12,Kafang(i),N_p(l,7),length(N_PR{l}(:,1)),N_p(l,32),N_p(l,26), ...
-                            F(i-1),CyclicFlag,tcr(3),Timer(i),TransDir); % option to use conventional loopV method
+                    %    [DragInfo{l}(i,1,:) DiffInfo{l}(i,1,:) GibbsE]=loopV_solute_drag(V0(1),T(i),Comp_m(2),N_p(l,15),N_p(l,17),Ux, ...
+                    %        xC_F_eq(i),xC_A_eq(i),N_p(l,34),D_C(i)*1e-12,Kafang(i),N_p(l,7),length(N_PR{l}(:,1)),N_p(l,32),N_p(l,26), ...
+                    %        F(i-1),CyclicFlag,tcr(3),Timer(i),TransDir); % option to use conventional loopV method
                    end
                    if DragInfo{l}(i,1,6)<=0
                         DragInfo{l}(i,1,1)=0;
@@ -941,8 +941,9 @@ while stop_cycle~=1 % main loop to calculate nucleation,growth and call impingem
     else
         dt(i+1)=dt(1);
     end
-    if exist('v_t','var')
-        if all(abs(v_t(i,:))<=5e-4) && Timer(i)>tcr(2) && Timer(i)<tcr(3)-(tcr(3)-tcr(2))/15 && CyclicFlag==1
+    if exist('v_t','var') && i>25
+    %    if all(abs(v_t(i,:))<=5e-4) && Timer(i)>tcr(2) && Timer(i)<tcr(3)-(tcr(3)-tcr(2))/15 && CyclicFlag==1
+		if (all(abs(v_t(i,:))<=5e-4) || (abs(F(i-1)-F(i-25))<=1e-2 && (N_eff(i)-N_eff(i-25))==0)) && Timer(i)>tcr(2) && Timer(i)<tcr(3)-(tcr(3)-tcr(2))/15 && CyclicFlag==1
             dt(i+1)=(tcr(3)-tcr(2))/15;
             if Timer(i)+dt(i)+dt(i+1)>tcr(3)
                 dt(i+1)=dt(1);
