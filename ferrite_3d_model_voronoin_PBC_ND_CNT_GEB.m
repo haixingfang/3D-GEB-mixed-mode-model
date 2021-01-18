@@ -18,12 +18,10 @@
 % Thermodynamic data has to be available and certain changes have to be made
 % before this model can be applied to other alloys
 % for running on PC
-
-% Last update on Jan 4, 2021
+% Last updated in January 2021
 
 clear all;
 close all;
-
 % load Multi-Parametric Toolbox 3
 % https://www.mpt3.org/
 % addpath('C:\Users\hfang\Documents\MATLAB\tbxmanager');
@@ -460,11 +458,11 @@ elseif CyclicFlag==0
 else
     dt(1)=tcr(end)/100; % for continuous cooling, about 3.5 h
 end
-dx=[1 0.005]; % max and min step size in length [um]
+dx=[2 0.005]; % max and min step size in length [um]
 DiffInfo=cell([1 length(N_p(:,1))]);
 
 while stop_cycle~=1 % main loop to calculate nucleation,growth and call impingement function
-    t
+    [t dt(i+1)]
     i=i+1;
     n=1;
     Nucleated{i}=[]; % restore all the nucleated ferrite
