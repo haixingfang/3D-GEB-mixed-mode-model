@@ -34,6 +34,7 @@ psi=5e-8; % a factor containing the information of shape of critical nucleus and
 % these two parameters should be adjusted to match the experimental data
 % by default, tao = 0
 SC=1/500; % S/C, scaling factor of potential nucleation sites/nucleation scale, for isothermal and cycling [300-1000]; for cnt, [35 - 3000]
+% SC=1/800;
 tao=0; % varies in 4~18s according to S.E.Offerman et al Scientific Report 2016
 % %% Calculate incubation time according to Aaronson
 % a=3.620e-10; % Jumping distance [m]

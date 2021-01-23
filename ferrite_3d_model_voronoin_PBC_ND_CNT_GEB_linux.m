@@ -19,7 +19,7 @@
 % before this model can be applied to other alloys
 % for running on linux cluster
 
-% Last update in January, 2021
+% Last updated in January, 2021
 
 clear all;
 % start the MPT3 toolbox
@@ -458,11 +458,11 @@ elseif CyclicFlag==0
 else
     dt(1)=tcr(end)/100; % for continuous cooling, about 3.5 h
 end
-dx=[2 0.005]; % max and min step size in length [um]
+dx=[1 0.005]; % max and min step size in length [um]
 DiffInfo=cell([1 length(N_p(:,1))]);
 
 while stop_cycle~=1 % main loop to calculate nucleation,growth and call impingement function
-    t
+    [t dt(i+1)]
     i=i+1;
     n=1;
     Nucleated{i}=[]; % restore all the nucleated ferrite
@@ -1234,6 +1234,11 @@ while stop_cycle~=1 % main loop to calculate nucleation,growth and call impingem
 %%%%%%%%%%%%%%%%%%%%%%%%%
     if T(i)<=Temp_eq(5,2)||Timer(i)>tcr(end)
         stop_cycle=1;
+    end
+    if CyclicFlag==0 && i>50
+        if abs(F(i)-F(i-1))<=1e-5 && (N_eff(i)-N_eff(i-1))==0 && (N_eff(i)-N_eff(i-50))==0
+            stop_cycle=1;
+        end
     end
     t=t+dt(i);
 end
