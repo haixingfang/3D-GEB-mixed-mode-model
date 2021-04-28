@@ -32,7 +32,7 @@ This package is free to use, ditribute and adapt, but no warranty and liability 
 See the [LICENSE](https://github.com/haixingfang/3D-GEB-mixed-mode-model/blob/master/LICENSE) for license rights and limitations (GNU General Public License v3.0).
 
 # Reference
-[H. Fang, S. van der Zwaag, N.H. van Dijk, A novel 3D mixed-mode multigrain model with efficient implementation of solute drag applied to austenite-ferrite phase transformations in Fe-C-Mn alloys, 2021, Acta Materialia, 116897.](https://doi.org/10.1016/j.actamat.2021.116897) <br>
+[H. Fang, S. van der Zwaag & N.H. van Dijk (2021). A novel 3D mixed-mode multigrain model with efficient implementation of solute drag applied to austenite-ferrite phase transformations in Fe-C-Mn alloys, Acta Materialia, 116897.](https://doi.org/10.1016/j.actamat.2021.116897) <br>
 Please cite our paper if you use or get inspired by our code or algorithm.
 
 ## Contact via hfang@tudelft.nl or haixingfang868@gmail.com or haixing.fang@simap.grenoble-inp.fr
